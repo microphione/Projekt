@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ListaZakupowModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DostepnePotrawy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nazwa" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Cena" Type="real" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Listy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UzytkownikID" Type="int" Nullable="false" />
+          <Property Name="Nazwa" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Produkty">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ListaID" Type="int" Nullable="false" />
+          <Property Name="Nazwa" Type="nvarchar" MaxLength="40" Nullable="false" />
+          <Property Name="Ilosc" Type="int" Nullable="false" />
+          <Property Name="CzyKupiono" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Uzytkownicy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Haslo" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CzyAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Listy_Uzytkownicy">
+          <End Role="Uzytkownicy" Type="Self.Uzytkownicy" Multiplicity="1" />
+          <End Role="Listy" Type="Self.Listy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Uzytkownicy">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Listy">
+              <PropertyRef Name="UzytkownikID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Produkty_Listy">
+          <End Role="Listy" Type="Self.Listy" Multiplicity="1" />
+          <End Role="Produkty" Type="Self.Produkty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listy">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Produkty">
+              <PropertyRef Name="ListaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ZnajdzUzyt" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar(max)">
+          <Parameter Name="Login" Type="nvarchar" Mode="In" />
+          <Parameter Name="Haslo" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="ListaZakupowModelStoreContainer">
+          <EntitySet Name="DostepnePotrawy" EntityType="Self.DostepnePotrawy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Listy" EntityType="Self.Listy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Produkty" EntityType="Self.Produkty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Uzytkownicy" EntityType="Self.Uzytkownicy" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Listy_Uzytkownicy" Association="Self.FK_Listy_Uzytkownicy">
+            <End Role="Uzytkownicy" EntitySet="Uzytkownicy" />
+            <End Role="Listy" EntitySet="Listy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Produkty_Listy" Association="Self.FK_Produkty_Listy">
+            <End Role="Listy" EntitySet="Listy" />
+            <End Role="Produkty" EntitySet="Produkty" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ListaZakupowModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DostepnePotrawy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nazwa" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cena" Type="Single" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Listy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UzytkownikID" Type="Int32" Nullable="false" />
+          <Property Name="Nazwa" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Uzytkownicy" Relationship="Self.FK_Listy_Uzytkownicy" FromRole="Listy" ToRole="Uzytkownicy" />
+          <NavigationProperty Name="Produkty" Relationship="Self.FK_Produkty_Listy" FromRole="Listy" ToRole="Produkty" />
+        </EntityType>
+        <EntityType Name="Produkty">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ListaID" Type="Int32" Nullable="false" />
+          <Property Name="Nazwa" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ilosc" Type="Int32" Nullable="false" />
+          <Property Name="CzyKupiono" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Listy" Relationship="Self.FK_Produkty_Listy" FromRole="Produkty" ToRole="Listy" />
+        </EntityType>
+        <EntityType Name="Uzytkownicy">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Haslo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CzyAdmin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Listy" Relationship="Self.FK_Listy_Uzytkownicy" FromRole="Uzytkownicy" ToRole="Listy" />
+        </EntityType>
+        <Association Name="FK_Listy_Uzytkownicy">
+          <End Role="Uzytkownicy" Type="Self.Uzytkownicy" Multiplicity="1" />
+          <End Role="Listy" Type="Self.Listy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Uzytkownicy">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Listy">
+              <PropertyRef Name="UzytkownikID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Produkty_Listy">
+          <End Role="Listy" Type="Self.Listy" Multiplicity="1" />
+          <End Role="Produkty" Type="Self.Produkty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listy">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Produkty">
+              <PropertyRef Name="ListaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ListaZakupowEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DostepnePotrawy" EntityType="Self.DostepnePotrawy" />
+          <EntitySet Name="Listy" EntityType="Self.Listy" />
+          <EntitySet Name="Produkty" EntityType="Self.Produkty" />
+          <EntitySet Name="Uzytkownicy" EntityType="Self.Uzytkownicy" />
+          <AssociationSet Name="FK_Listy_Uzytkownicy" Association="Self.FK_Listy_Uzytkownicy">
+            <End Role="Uzytkownicy" EntitySet="Uzytkownicy" />
+            <End Role="Listy" EntitySet="Listy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Produkty_Listy" Association="Self.FK_Produkty_Listy">
+            <End Role="Listy" EntitySet="Listy" />
+            <End Role="Produkty" EntitySet="Produkty" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ListaZakupowModelStoreContainer" CdmEntityContainer="ListaZakupowEntities">
+          <EntitySetMapping Name="DostepnePotrawy">
+            <EntityTypeMapping TypeName="ListaZakupowModel.DostepnePotrawy">
+              <MappingFragment StoreEntitySet="DostepnePotrawy">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Nazwa" ColumnName="Nazwa" />
+                <ScalarProperty Name="Cena" ColumnName="Cena" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Listy">
+            <EntityTypeMapping TypeName="ListaZakupowModel.Listy">
+              <MappingFragment StoreEntitySet="Listy">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UzytkownikID" ColumnName="UzytkownikID" />
+                <ScalarProperty Name="Nazwa" ColumnName="Nazwa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Produkty">
+            <EntityTypeMapping TypeName="ListaZakupowModel.Produkty">
+              <MappingFragment StoreEntitySet="Produkty">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ListaID" ColumnName="ListaID" />
+                <ScalarProperty Name="Nazwa" ColumnName="Nazwa" />
+                <ScalarProperty Name="Ilosc" ColumnName="Ilosc" />
+                <ScalarProperty Name="CzyKupiono" ColumnName="CzyKupiono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Uzytkownicy">
+            <EntityTypeMapping TypeName="ListaZakupowModel.Uzytkownicy">
+              <MappingFragment StoreEntitySet="Uzytkownicy">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Haslo" ColumnName="Haslo" />
+                <ScalarProperty Name="CzyAdmin" ColumnName="CzyAdmin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
